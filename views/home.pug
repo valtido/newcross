@@ -1,0 +1,134 @@
+doctype html
+html(lang='en')
+    head
+        title Pug
+        link(rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous")
+        style.
+            .hidden{
+                display: none;
+            }
+            .box{
+                background: white;
+                border: 1px solid #f5f5f5;
+                padding: 10px;
+            }
+            ul.select2-choices {
+                padding-right: 30px !important;
+            }
+
+            ul.select2-choices:after {
+                content: "";
+                position: absolute;
+                right: 10px;
+                top: 50%;
+                transform: translateY(-50%);
+                border-top: 5px solid #333;
+                border-left: 5px solid transparent;
+                border-right: 5px solid transparent;
+            }
+        script(defer src="https://use.fontawesome.com/releases/v5.0.7/js/all.js")
+        script(src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js")
+        link(href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet")
+        script(src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js")
+        script.
+            $(document).ready(function(){
+                $('body')
+                .on("submit","form", function(event){
+                    event.preventDefault();
+                    var data = $(this).serializeArray();
+                    $.each(data, function(i,item){
+                        console.log(item.name, item.value);
+                    })
+                })
+                .on("change","form", function(){
+                    var submit = $(this).find('button[type=submit]');
+                    var skills = $(this).find('[name="skills"]');
+                    submit.attr("disabled", "disabled");
+
+                    if(skills.val().length){
+                        submit.attr("disabled", false);
+                    }
+                })
+                .on("click","#ongoing", function(){
+                    $(this).parents('.end_date_wrapper').find(".end_date_specific").hide();
+                })
+                .on("click","#specific", function(){
+                    $(this).parents('.end_date_wrapper').find(".end_date_specific").show();
+                })
+                .on("click","a.addSkillBtn", function(){
+                    var addSkillWrap = $('.addSkillWrap');
+                    var addSkillInput = $('.addSkillInput');
+
+                    if(addSkillInput.val()){
+                        var text = addSkillInput.val();
+                        var newOption = new Option(text, text, true, true);
+                        $('.selectpicker').append(newOption).trigger('change');
+                        addSkillWrap.hide();
+                        addSkillInput.val("");
+                    }
+                })
+                .on("click","a.addSkill", function(){ $('.addSkillWrap').toggle(); } )
+                ;
+
+                $('.selectpicker').select2({placeholder: "Select Skill or Competency"});
+            })
+
+
+body
+    h1 Pug Examples
+    form
+        div.row
+            div.col-lg-6
+                label Client Summary
+                div.box
+                    textarea.form-control(placeholder="Please add summary of the client and why they need care..." name="summary")
+            div.col-lg-6
+                h2 Duration of package
+                div.row
+                    div.col-lg-6
+                        label Start Date
+                        input(type="date" name="start_date")
+                        i.fa.fa-calendar
+                    div.col-lg-6.end_date_wrapper
+                        label End Date
+                        div.custom-control.custom-radio
+                            input#ongoing.custom-control-input(type="radio" name="end_date_type" value="ongoing")
+                            label.custom-control-label(for="ongoing") Ongoing
+                        div.custom-control.custom-radio
+                            input#specific.custom-control-input(type="radio"  name="end_date_type" value="specific")
+                            label.custom-control-label(for="specific") Specific
+
+                        div.end_date_specific.hidden
+                            input(type="date" name="end_date" )
+                            i.fa.fa-calendar
+        div.row
+            div.col-lg-6
+                label Skills & Competencies required
+                div.box
+                    select.selectpicker(multiple name="skills")
+                        each skill,index in skills
+                            option(value=skill) #{skill}
+                    hr
+                    a.addSkill(href="#") + Add Additional Skill
+                    div.hidden.addSkillWrap
+                        input.addSkillInput
+                        a.addSkillBtn.btn(href="#") Add new skill
+            div.col-lg-6
+                h2 Duration of package
+                div.form-group
+                    label Staff Gender Preferences
+                    div.form-group
+                        div.custom-control.custom-radio.custom-control-inline
+                            input#none.custom-control-input(type="radio" name="gender" value="none")
+                            label.custom-control-label(for="none") None
+                        div.custom-control.custom-radio.custom-control-inline
+                            input#male.custom-control-input(type="radio"  name="gender" value="male")
+                            label.custom-control-label(for="male") Male
+                        div.custom-control.custom-radio.custom-control-inline
+                            input#female.custom-control-input(type="radio"  name="gender" value="female")
+                            label.custom-control-label(for="female") Female
+
+                    input.end_date_specific.hidden(type="date" )
+            div.col-lg-6
+                button.btn.btn-disabled.disbaled(type="submit" disabled=true) Next
+

@@ -1,0 +1,17 @@
+doctype html
+html(lang='en')
+    head
+        title Auth
+        link(rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous")
+body
+    h1 Pug Examples
+    form(method="POST")
+        div.row
+            div.col-lg-6
+                input(name="username" value="demo")
+                input(name="password" value="demo" type="password")
+            div.col-lg-6
+                button.btn(type="submit") Login
+
+    script.
+            document.querySelector("button.btn").click()
